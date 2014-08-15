@@ -1,0 +1,4 @@
+*.asv
+*.pyc
+Thumbs.db
+/figures/scripts/analyzedata/load_hist.pkl

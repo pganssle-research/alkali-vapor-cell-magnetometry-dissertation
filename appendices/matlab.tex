@@ -1,0 +1,55 @@
+\documentclass[../PaulGanssle-Thesis.tex]{subfiles}
+
+\begin{document}
+\chapter{Matlab Scripts}
+\label{matlab.scripts}
+\lstset{style=mat,xleftmargin=0em,basicstyle=\ttfamily\scriptsize}
+For posterity, a collection of Matlab scripts used in data processing and readout are included herein. These were most recently used with Matlab 7.13.0.564 and no specific effort was made to make them backwards compatible. A more complete collection of MATLAB scripts, C-code and data can currently be found at \href{https://github.com/pganssle-research}{https://github.com/pganssle-research}.
+
+\section{Binary Serialization Format}
+\label{matlab.scripts.bsf}
+There are a suite of scripts for converting files from the binary serialization format into a Matlab-readable format. The most general, \texttt{mc\_read\_bin}, reads data into a \lstinline|struct| which parses the available metadata in a generic way, making no assumptions about the contents of the files. The scripts \hyperlink{matlab.scripts.bsf.mcreaddata}{\texttt{mc\_read\_data}} and \hyperlink{matlab.scripts.bsf.mcreaddata}{\texttt{mc\_read\_prog}} are used for parsing .mcd and .pp files specifically, and will throw errors if the results do not conform to the relevant \hyperlink{console.software.bin.spec}{specifications}.
+\subsection{Readout}
+\subsubsection{\texttt{mc\_read\_bin}}
+\label{matlab.scripts.bsf.mcreadbin}
+\lstinputlisting{appendices/scripts/mc_read_bin.m}
+
+\subsubsection{\texttt{mc\_read\_data}}
+\textbf{Requires:} \texttt{mc\_read\_bin}, \texttt{mc\_read\_prog}, \texttt{find\_loop\_locs}, \texttt{process\_data}
+\label{matlab.scripts.bsf.mcreaddata}
+\lstinputlisting{appendices/scripts/mc_read_data.m}
+
+\subsubsection{\texttt{mc\_read\_prog}}
+\textbf{Requires:} \texttt{find\_loop\_locs}
+\label{matlab.scripts.bsf.mcreadprog}
+\lstinputlisting{appendices/scripts/mc_read_prog.m}
+
+\subsubsection{\texttt{find\_loop\_locs}}
+\label{matlab.scripts.bsf.findlooplocs}
+\lstinputlisting{appendices/scripts/find_loop_locs.m}
+
+\subsection{Analysis}
+\label{matlab.scripts.bsf.analysis}
+These are some scripts used for data analysis which operate the outputs of \texttt{mc\_read\_bin}.
+\subsubsection{\texttt{add\_fft}}
+\label{matlab.scripts.bsf.addfft}
+\textbf{Requires:} \texttt{process\_data}
+\lstinputlisting{appendices/scripts/add_fft.m}
+
+\subsubsection{\texttt{process\_data}}
+\label{matlab.scripts.bsf.processdata}
+\textbf{Requires:} \texttt{sub\_poly}, \texttt{apodize}
+\lstinputlisting{appendices/scripts/process_data.m}
+
+\subsubsection{\texttt{sub\_poly}}
+\label{matlab.scripts.bsf.subpoly}
+\lstinputlisting{appendices/scripts/sub_poly.m}
+
+\subsubsection{\texttt{apodize}}
+\label{matlab.scripts.bsf.apodize}
+\lstinputlisting{appendices/scripts/apodize.m}
+\end{document}
+
+
+
+

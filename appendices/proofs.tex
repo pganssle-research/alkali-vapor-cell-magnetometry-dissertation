@@ -1,0 +1,381 @@
+\documentclass[../PaulGanssle-Thesis.tex]{subfiles}
+
+\begin{document}
+\chapter{Proofs}
+% This section should be moved to an appendix.
+\label{Proofs}
+As it is sometimes useful to see the proofs behind equations, but rarely sufficiently compelling that it justifies a treatment in the main text, the proofs of many analyses have been relegated to this appendix.
+
+\section{Circuit Analyses}
+\label{proofs.circuits}
+
+% \subsection{Shim Coils}
+% \label{proofs.circuits.shim}
+
+% \subsection{Pulse Circuit}
+% \label{proofs.circuits.pulse}
+\subsubsection{Pulse Angle Error from Rise Times}
+\label{proofs.pulses.rise.times}
+The tip angle ($\theta_p$) from an induced pulse is given by:
+
+\begin{equation}
+\theta_p = -\gamma \int B_p(t) \dif t
+\end{equation}
+
+Where $\gamma$ is the gyromagnetic ratio of the spin and $B_p(t)$ is the magnetic field used for the pulse along the pulse direction in the spin's frame of reference (generally this is given in the rotating frame, but at zero field the rotating frame coincides with the lab frame). For a DC pulse with a characteristic time constant $\tau$, applying a pulse of duration $t_p$, the tip angle as a function of time is thus:
+
+\begin{equation}
+\theta(t) =\begin{cases}
+-\gamma B_{0}\int_{0}^{t}\left(1-e^{-\sfrac{\hat{t}}{\tau}}\right)\dif\hat{t} & 0 \leq t \leq \hat{t_p}.\\
+-\gamma B_{0}\int_{0}^{t_p}\left(1-e^{-\sfrac{\hat{t}}{\tau}}\right)\dif\hat{t} + \gamma B_0\left(1-e^{-\sfrac{t_p}{\tau}}\right)\int_{t_p}^{t}e^{-\sfrac{\hat{t}}{\tau}}\dif \hat{t} & t > t_p
+\end{cases}
+\end{equation}
+
+Solving the integral for the first case (during the rise time):
+\begin{eqnarray}
+\int_0^t\left(1-e^{-\sfrac{\hat{t}}{\tau}}\right)\dif\hat{t} & = & \left[\hat{t} - \tau e^{-\sfrac{\hat{t}}{\tau}}\right]^{t}_{0} \\
+& = & \left(t-\tau e^{-\sfrac{t}{\tau}}\right) - \left(0 - e^{0}\right)\\
+& = & t - \tau\left(1 -e^{-\sfrac{t}{\tau}}\right)
+\end{eqnarray}
+
+And for the decay time:
+
+\begin{eqnarray}
+\left(1-e^{-\sfrac{t_p}{\tau}}\right)\int_{t_p}^{t}e^{-\sfrac{\left(\hat{t}-t_p\right)}{\tau}}\dif \hat{t} & = & \left(1-e^{-\sfrac{t_p}{\tau}}\right)\left[\hat{t}-\tau e^{-\sfrac{\hat{t}}{\tau}}\right]^{t}_{t_{p}} \\
+& = & \tau\left(1-e^{-\sfrac{t_{p}}{\tau}}\right)\left[1-e^{-\sfrac{\left(t-t_p\right)}{\tau}}\right]
+\end{eqnarray}
+
+So combining these two (assume $t > t_p$):
+
+\begin{equation}
+\int_{0}^{t} B(\hat{t})\dif\hat{t} = t_p + \tau e^{-\sfrac{\left(t-t_p\right)}{\tau}}\left(1 - e^{-\sfrac{t_p}{\tau}}\right)
+\end{equation}
+
+And for $t \gg \tau$, $e^{-\sfrac{\left(t-tp\right)}{\tau}} \approx 0$ and the second term drops out, indicating that for sufficiently long inter-pulse spacing relative to $\tau$, deviations from perfect square pulses have no effect on the tip angle.
+
+\subsubsection{Calculation of $V_O$}
+For convenience, define the effective resistance of the coil output stage (after the noise-limiting diodes) $R_M$ as:
+
+\begin{eqnarray}
+R_M & = & \left(\frac{1}{R_1} + \frac{1}{R_C}\right)^{-1} + R_2 \\
+R_M & = & \frac{R_1R_C}{R_1 + R_C} + R_S \\ \label{eqn:RM_EffectiveResistance}
+\end{eqnarray}
+
+Then, as nearly all circuit proofs do, start from Kirchoff's rules and Ohm's law:
+
+\begin{eqnarray}
+I_S & = & I_{SH} + I_{M} \\
+\frac{V_P}{R_S} & = & \frac{V_o - V_P}{R_{SH}} + \frac{V_C - V_P}{R_M}\\
+\frac{V_P}{R_S} & = & V_o\left(\frac{R_{SH} + R_{M}}{R_{SH}R_{M}}\right) - V_P\left(\frac{R_{SH} + R_{M}}{R_{SH}R_{M}}\right) - \frac{\Delta V_D}{R_{M}} \\
+V_o\left(\frac{R_{SH} + R_{M}}{R_{SH}R_{M}}\right) & = & V_P\left(\frac{R_{SH} + R_{M}}{R_{SH}R_{M}} + \frac{1}{R_S}\right) + \frac{\Delta{V_D}}{{R_M}} \\
+V_o & = & V_P\left[1 + \frac{R_{M}R_{SH}}{R_S(R_M + R_{SH})}\right] + \frac{\Delta V_D R_{SH}}{R_M + R_{SH}}
+\end{eqnarray}
+
+This applies only when $V_o \geq \Delta V_D$, otherwise treat $R_M$ as effectively open and $I_M$ as 0. When (as should likely be the case), $R_{SH} \gg R_M$, the last equation simplifies to:
+
+\begin{equation}
+V_o \approx V_P\left(1 + \frac{R_M}{R_S}\right) + \Delta V_D
+\end{equation}
+
+\subsubsection{Calculation of Shunt Resistor Current Loss}
+\label{proofs.circuits.pulse.shunt}
+
+Start with the convenient definition:
+
+\begin{equation}
+\Delta V = V_o - V_P
+\end{equation}
+
+\begin{eqnarray}
+\frac{I_{SH}}{I_{SH} + I_{M}} & = & \frac{\Delta V}{R_{SH}}\left(\frac{\Delta V}{R_{SH}} + \frac{\Delta V - \Delta V_D}{R_M}\right)^{-1} \\
+& = & \left(\frac{R_{SH} + R_M}{R_M} - \frac{\Delta V_{D} R_{SH}}{R_M\Delta V}\right)^{-1} \\
+\end{eqnarray}
+
+Now calculate $\Delta V$:
+
+\begin{eqnarray}
+\Delta V & = & V_P\left[1 + \frac{R_MR_{SH}}{R_S(R_M + R_{SH})}\right] - \frac{\Delta V_D}{R_M} - V_P \\
+& = & \frac{V_PR_MR_{SH}}{R_S(R_M + R_{SH})} - \frac{\Delta V_D}{R_M}
+\end{eqnarray}
+
+Finally substitute and simplify:
+
+\begin{equation}
+\frac{I_{SH}}{I_{SH} + I_{M}} = \left[1 + \frac{R_{SH}}{R_M} - \frac{\Delta V_{D}R_{SH}}{\frac{V_P R_{SH}}{R_S(R_{M}+R_{SH})} - \Delta V_{D}}\right]^{-1}
+\end{equation}
+
+Again, this holds only when $V_o \geq \Delta V_D$, otherwise the fraction is 1.
+
+\subsubsection{Calculation of $I_C$}
+\label{proofs.circuits.pulse.coil}
+First, defining the voltage drop across the coil as $\Delta V_C$:
+
+\begin{eqnarray}
+\frac{I_C}{I_1 + I_C} & = & \frac{\frac{\Delta V_C}{R_C}}{\frac{\Delta V_C}{R_C} + \frac{\Delta V_C}{R_1}} \\
+& = & \frac{1}{R_{C}\left(\frac{1}{R_C} + \frac{1}{R_1}\right)} \\
+& = & \frac{1}{\left(1 + \frac{R_C}{R_1}\right)} \\
+& = & \frac{R_1}{R_1 + R_C} \label{eqn:IC_EqnArrayResult}
+\end{eqnarray}
+
+Now calculate the current $I_M = I_1 + I_C$:
+
+\begin{eqnarray}
+I_M & = & \frac{\Delta V - \Delta V_D}{R_M} \\
+ & = & \frac{1}{R_M}\left(\frac{V_{P}R_{M}R_{SH}}{R_{S}(R_{M} + R_{SH}} - \frac{\Delta V_D}{R_M} - \Delta V_D\right) \\
+ & = & \frac{V_P R_{SH}}{R_{S}(R_{M} + R_{SH})} - \frac{\Delta V_{D}}{R_{M}}\left(1 + \frac{1}{R_{M}}\right)
+\end{eqnarray}
+
+Now substitute in $R_M$ from Eqn. \ref{eqn:RM_EffectiveResistance}:
+
+\begin{equation}
+I_M = \frac{V_P R_{SH}}{R_{S}\left(\frac{R_{1}R_{C}}{R_{1} + R_{C}} + R_2 + R_{SH}\right)} - \frac{\Delta V_D}{\frac{R_{1}R_{C}}{R_{1} + R_{C}} + R_{2}}\left[1 + \frac{R_{1} + R_{C}}{R_{2}(R_{1} + R_{C}) + R_{1}R_{C}}\right]
+\end{equation}
+
+And finally, we can multiply this result by the result from \ref{eqn:IC_EqnArrayResult} to obtain $I_C$:
+
+\begin{equation}
+I_C = \frac{V_{P}R_{SH}R_{1}}{R_{S}\left(R_{1}+R_{C}\right)\left(\frac{R_{1}R_{C}}{R_{1} + R_{C}} + R_{2} + R_{SH}\right)} - \frac{\Delta V_{D} R_{1}}{R_{1}R_{C} + R_{2}}\left[1 + \frac{R_{1} + R_{C}}{R_{2}(R_{1} + R_{C}) + R_{1}R_{C}}\right]
+\end{equation}
+
+\subsection{Balanced polarimeter}
+\label{proofs.circuits.balancedpolarimeter}
+The voltage signal from channels 1 and 2 are given by Eqns \ref{eqn:PhotoDiodeChannel1Voltage} and \ref{eqn:PhotoDiodeChannel2Voltage}, respectively:
+
+\begin{align}
+\label{eqn:PhotoDiodeChannel1Voltage}
+V_{1} & = I_{1}R_{L1}\sin^{2}(\theta) \\
+\label{eqn:PhotoDiodeChannel2Voltage}
+V_{2} & = I_{2}R_{L2}\cos^{2}(\theta)
+\end{align}
+
+The difference voltage signal from the balanced polarimeter is thus:
+
+\begin{equation}
+\label{eqn:PhotoDiodeSubtractionVoltage}
+\Delta V = I_{1}R_{L1}\sin^2(\theta - \sfrac{\pi}{4}) - I_{2}R_{L2}\cos^2(\theta - \sfrac{\pi}{4})
+\end{equation}
+
+\subsubsection{False balance from imbalanced load resistors.}
+\label{proofs.circuits.balancedpolarimeter.imbalancedresistors}
+Even with identical responses in each channel ($I_{1} = I_{2} = I_{0}$), a false balance can still be induced from a difference in the load resistors. To determine the extent that imbalanced load resistances affect the output signal, start with Eqn \ref{eqn:PhotoDiodeSubtractionVoltage} in the identical response, ``balanced'' ($\Delta V = 0$) condition, given by Eqn \ref{eqn:PhotoDiodeBalancedIdenticalResponse}:
+
+\begin{equation}
+\label{eqn:PhotoDiodeBalancedIdenticalResponse}
+R_{L1}\sin^2\left(\theta_e - \sfrac{\pi}{4}\right) - R_{L2}\cos^2\left(\theta_e-\sfrac{\pi}{4}\right) = 0
+\end{equation} 
+
+Rearranging this we get the following:
+\begin{align}
+\label{eqn:PDLoadImbalance1}
+R_{L1}\left[1-\sin(2\theta_{e})\right] - R_{L2}\left[1 + \sin(\theta_{e})\right] = 0 \\
+\label{eqn:PDLoadImbalance2}
+(R_{L1} - R_{L2}) - (R_{L1} + R_{L2})\sin(2\theta_{e}) = 0 \\
+\label{eqn:PDLoadImbalance3}
+\sin(2\theta_{e}) = \frac{R_{L1} - R_{L2}}{R_{L1}+R_{L2}}
+\end{align}
+
+Which gives Eqn \ref{eqn:PDLoadImbalanceAngle} for the angle as a function of the load imbalance:
+\begin{equation}
+\label{eqn:PDLoadImbalanceAngle}
+\theta_e = \frac{1}{2}\mathrm{asin}\left(\frac{R_{L1} - R_{L2}}{R_{L2} + R_{L1}}\right)
+\end{equation}
+
+And taking each resistor as deviations from the mean resistance such that $R_{L1} = R_{L} + \sigma_{R}$ + $R_{L2} = R_{L} - \sigma_{R}$, this equation simplifies to Eqn \ref{eqn:PDLoadImbalanceAngleFromError}:
+
+\begin{equation}
+\label{eqn:PDLoadImbalanceAngleFromError}
+\theta_{e} = \frac{1}{2}\mathrm{asin}\left(\frac{\sigma_{R}}{R_{L}}\right)
+\end{equation}
+
+\section{Quantum Mechanics}
+% \subsection{General}
+% \label{proofs.qm.general}
+% \subsubsection{Cyclic Commutators}
+% \label{proofs.qm.general.cycliccommutation}
+
+\subsection{J-Couplings}
+\subsubsection{Commutation of the J-Coupling Hamiltonian with Scalar Polarization}
+\label{proofs.qm.jcoupling.initialrhocommutation}
+The initial density matrix for a set of thermally polarized spins (Eqn. \ref{eqn:InitialDensityMatrix}) is:
+
+\begin{equation*}
+\rho_{0} = \frac{B_{z}}{k_{B}T}\sum_{i}\gamma_{i}I_{iz}
+\end{equation*}
+
+Where the $z$ axis is defined as the direction of the polarization of the spins. And the Hamiltonian is given by:
+
+\begin{equation*}
+H_{J} = \sum_{i}\sum_{j\neq i}J_{ij}\mathbf{I_{i}}\cdot\mathbf{I}_{j} = \sum_{ij}I_{ix}I_{jx} + I_{iy}I_{jy} + I_{iz}I_{jz}
+\end{equation*}
+
+The commutator of the density matrix and the Hamiltonian can be calculated from the cyclic commutation relationship:
+
+\begin{equation}
+\label{eqn:CyclicCommutation}
+\left[I_{ia}, I_{jb}\right] = 2i\delta_{i,j}\varepsilon_{abc}I_{ic}
+\end{equation}
+
+The commutator is thus:
+
+\begin{align}
+\label{eqn:DMCommutation1}
+\left[\rho_{0}, H_{J}\right] & = \frac{\bar{h}\gamma B_{0}}{2k_{B}T}\sum_{i}\sum_{j \neq i}J_{ij}\left[I_{iz}, I_{ix}I_{jx} + I_{iy}I_{jy} + I_{iz}I_{jz}\right]\\
+\label{eqn:DMCommutation2}
+ & = \frac{\bar{h}\gamma B_{0}}{2k_{B}T}\sum_{i}\sum_{j \neq i}J_{ij}\left(\left[I_{iz}, I_{ix}I_{jx}\right] + \left[I_{iz}, I_{iy}I_{jy}\right]\right) \\
+\label{eqn:DMCommutation3}
+ & = \frac{\bar{h}\gamma B_{0}}{2k_{B}T}\sum_{i}\sum_{j \neq i}J_{ij}\left(I_{iy}I_{jx} - I_{ix}I_{jy}\right) \\
+\end{align}
+
+Taking advantage of the fact that J-couplings are always symmetric (i.e. $J_{ij} = J_{ji}$), we can see that for each term $J_{ij}\left(I_{ix}I_{jy} - I_{iy}I_{jx}\right)$, there is a corresponding term $J_{ji}\left(I_{jx}I_{iy} - I_{jy}I_{ix}\right) = -J_{ij}\left(I_{ix}I_{jy} - I_{iy}I_{ix}\right)$. Using this, Eqn. \ref{eqn:DMCommutation3} can be re-written as Eqn. \ref{eqn:DMCommutationResult}:
+
+\begin{equation}
+\left[\rho_{0}, H_{J}\right]  = \frac{i\Delta E}{k_{B}T}\left(\sum_{i}\sum_{j \neq i} I_{ix}I_{jy} - \sum_{i}\sum_{j \neq i} I_{ix}I_{jy}\right)
+\label{eqn:DMCommutationResult}
+\end{equation}
+
+And thus $\left[\rho_{0}, H_{J}\right]$ = 0.
+
+\subsubsection{Evolution of the initial density matrix for heteronuclei with non-identical $\gamma$}
+\label{proofs.qm.jcoupling.densitymatheteronuclei}
+For a thermally polarized ensemble of spins $\mathbf{I}_{i}$ and $\mathbf{S}_{n}$, the initial density matrix is given by:
+
+\begin{gather}
+\rho_{0}  = \frac{\gamma_{I}B_0}{2k_{B}T}\sum_{i}I_{iz} + \frac{\gamma_{S}B_{0}}{2k_{B}T}\sum_{n}S_{nz} \\
+\rho_0 = \frac{\hbar B_{0}}{2k_{B}T}\left(\gamma_{i}\sum_{i}I_{iz} + \gamma_{S}\sum_{n}S_{nz}\right) \\
+\rho_0 = \frac{\hbar B_{0}(\gamma_{I}+\gamma_{S})}{2k_{B}T}\left(\sum_{in}I_{iz} + S_{nz}\right) + \frac{\hbar B_{0}(\gamma_{I}-\gamma_{S})}{2k_{B}T}\left(\sum_{in}I_{iz} - S_{nz}\right)
+\end{gather}
+
+It is known from Sec. \ref{proofs.qm.jcoupling.initialrhocommutation} that terms of the form $I_{iz} + S_{nz}$ will commute with the Hamiltonian, but terms of the form $I_{iz} - S_{nz}$ have significant, detectable precession under the J-coupling Hamiltonian.
+
+\subsubsection{Evolution of a two-spin heteronuclear system under a pulse}
+\label{proofs.qm.jcoupling.pulseapplied}
+For a two-spin system initially polarized in a state $I_{z} + S_{z}$, the application of a pulse along the $y$ direction with pulse angle $\theta_{I} = \theta - \Delta$ for the $\mathbf{I}$ spins will apply a (possibly) different type angle $\theta_{S} = \theta + \Delta$ to the $\mathbf{S}$ spins, creating zero-quantum and double-quantum coherences by introducing a relative tip angle $2\Delta$ between the spins. After the pulse, the density matrix is given by:
+
+\begin{align}
+\rho(\theta) = & \cos(\theta - \Delta)I_{z} - \sin(\theta - \Delta)I_{x} + \cos(\theta + \Delta)S_{z} - \sin(\theta + \Delta)S_{x} \\
+\phantom{\rho(\theta)} = & \phantom{-}\frac{\cos(\theta - \Delta) + \cos(\theta + \Delta)}{2}(I_{z} + S_{z}) + \frac{\cos(\theta - \Delta) - \cos(\theta + \Delta)}{2}(I_{z} - S_{z}) \\ 
+& - \frac{\sin(\theta - \Delta) + \sin(\theta + \Delta)}{2}(I_{x} + S_{x}) - \frac{\sin(\theta - \Delta) - \sin(\theta + \Delta)}{2}(I_{x} - S_{x}) \\
+\phantom{\rho(\theta)} = & \phantom{-}\cos(\theta)\cos{\Delta}(I_{z} + S_{z}) - \sin(\theta)\sin(\Delta)(I_{z} - S_{z}) \\
+& - \sin(\theta)\cos(\Delta)(I_{x} + S_{x}) + \cos(\theta)\sin(\Delta)(I_{x} - S_{x}) 
+\end{align}
+
+And this is probably best represented by breaking it out into antiparallel terms (which evolve under the Hamiltonian), and parallel terms (which commute with the Hamiltonian):
+
+\begin{align}
+\rho(\theta) = & \cos(\Delta)\left[\cos(\theta)(I_{z} + S_{z}) - \sin(\theta)(I_{x} + S_{x})\right] \\ 
+			& - \sin(\Delta)\left[\sin(\theta)(I_{z} - S_{z}) - \cos(\theta)(I_{x} - S_{x})\right]
+\end{align}
+
+And of course $\Delta$ is a function of $\theta$, $\gamma_{I}$ and $\gamma_{S}$:
+
+\begin{align}
+\theta & = \theta_{I} + \Delta \\
+\theta & = \theta_{S} - \Delta \\
+\Delta & = \frac{\theta_{I} - \theta_{S}}{2}
+\end{align}
+
+And this is further constrained by the fact that $\theta_{I}$ and $\theta_{S}$ are functions of the same underlying process:
+
+\begin{align}
+\theta_{I} & = \gamma_{I}B_{1}t \\
+\theta_{S} & = \gamma_{S}B_{1}t \\
+& = \frac{\gamma_{S}}{\gamma_{I}}\gamma_{I}B_{1}t = \frac{\gamma_{S}}{\gamma_{I}}\theta_{I}
+\end{align}
+
+Now substituting into $\Delta$:
+
+\begin{align}
+\Delta & = \left[\theta_{I} - \theta_{I}\left(1 - \frac{\gamma_{S}}{\gamma_{I}}\right)\right] \\
+& = \frac{\theta_{I}\gamma_{S}}{2\gamma_{I}}
+\end{align}
+
+And from this follows $\theta$:
+
+\begin{equation}
+\theta = \theta_{I} - \Delta = \theta_{I}\left(1- \frac{\gamma_{S}}{2\gamma_{I}}\right)
+\end{equation}
+
+\section{Pulse Sequences}
+\subsection{Pulse Error corrections in multiphase $\pi$ trains.}
+\label{proofs.pulses.multiphasepi}
+When applying a $\pi$ train while alternating phase between $\vec{x}$ and $\vec{y}$ pulses, the $\pi$ pulses have a multually correcting effect. For errors $\epsilon_{x}$ and $\epsilon_{y}$ on $\pi_{x}$ and $\pi_{y}$, respectively, the density matrix after $n$ pulses may have some components along $I_{x}$, $I_{y}$ and $I_{z}$, these coefficients are defined as:
+
+\begin{equation}
+\label{eqn:DensityMatrixAfterNMultiphase}
+\rho_{n} = c_{n,x}I_{x} + c_{n,y}I_{y} + c_{n,z}
+\end{equation}
+
+The effect of the pulses with error are:
+
+\begin{align*}
+&       && \specialcell{\hfill{}\pi_{x} + \epsilon_{x}\hfill{}}  &&                                                    &\hspace*{15mm}&  && \pi_{y} + \epsilon_{y}     && & \\                                                           
+& I_{x} && \xrightarrow{\hspace*{1cm}}                           && \specialcell{\hfill{}I_{x}\hfill{}}                && I_{x}         && \xrightarrow{\hspace*{1cm}} && -I_{x}\cos(\epsilon{y}) + I_{z}\sin(\epsilon{y}) &\\
+& I_{y} && \xrightarrow{\hspace*{1cm}}                           && -I_{y}\cos(\epsilon_{x}) - I_{z}\sin(\epsilon_{x}) && I_{y}         && \xrightarrow{\hspace*{1cm}} && \specialcell{\hfill{}I_{y}\hfill{}} &\\
+& I_{z} && \xrightarrow{\hspace*{1cm}}                           && -I_{z}\cos(\epsilon_{x}) + I_{y}\sin(\epsilon_{x}) && I_{z}         && \xrightarrow{\hspace*{1cm}} && -I_{z}\cos(\epsilon_{y}) - I_x\sin(\epsilon_{y})&
+\end{align*}
+
+And so the terms of the density matrix at $2n$ and $2n+1$ (for $n\in[0,\inf]$) can be determined recursively:
+\begin{gather*}
+\vec{c}_{2n+1} = 
+\begin{bmatrix}
+c_{2n,x} \\
+-c_{2n,y}\cos(\epsilon_{x}) + c_{2n,z}\sin(\epsilon_{x}) \\
+-c_{2n,z}\cos(\epsilon_{x}) - c_{2n,y}\sin(\epsilon_{x})
+\end{bmatrix}\\
+\vec{c}_{2n} = 
+\begin{bmatrix}
+-c_{2n-1,x}\cos(\epsilon_{y} - c_{2n-1,z}\sin(\epsilon_{y}) \\
+c_{2n-1,y} \\
+-c_{2n,z}\cos(\epsilon_{y}) + c_{2n,x}\sin(\epsilon_{y})
+\end{bmatrix}
+\end{gather*}
+
+The pulses follow a 4-pulse cycle, and maximum symmetry is achieved on the $4n$ pulses. Taking $n=0$, we can derive $c_{4}$:
+
+\[
+\vec{c}_{4} = 
+\begin{bmatrix}
+\sin(\epsilon_{y}\left[\cos(\epsilon_{x})\cos(\epsilon_{y})+\cos^2(\epsilon_{x})\cos(\epsilon_{y})+\sin^2(\epsilon_{x})\right]\\
+-\sin(\epsilon_{x})\cos(\epsilon_{x})\left[\cos(\epsilon_{y})-1\right] \\
+\cos^2(\epsilon_{x})\cos^2(\epsilon_{y}) + \sin^2(\epsilon_{x})\cos(\epsilon_{y}) + \cos(\epsilon_{x})\sin^2(\epsilon_{y})
+\end{bmatrix}
+\]
+
+The signal should be all in $c_z$, and so we can take as our measure of the error $1-c_{z}$. Expanding the terms of $c_{4z}$ in a MacLaurin series:
+
+\begin{align*}
+\cos^2(\epsilon_{x}) & =  \left(\sum_{n=0}(-1)^{n}\frac{\epsilon_{x}^{2n}}{(2n)!}\right)\left(\sum_{m=0}(-1)^{m}\frac{\epsilon_{x}^{2m}}{(2m)!}\right) \\
+ & =  \sum_{n=0}\sum_{m=0}(-1)^{n+m}\frac{\epsilon_{x}^{2(n+m)}}{(2n)!(2m)!} \\
+ &  \\
+\sin^2(\epsilon_{x}) & = \left(\sum_{n=0}(-1)^{n}\frac{\epsilon{x}^{2n+1}}{(2n+1)!}\right)\left(\sum_{m=0}(-1)^{m}\frac{\epsilon_{x}^{2m+1}}{(2m+1)!}\right) \\
+ & =  \sum_{n=0}\sum_{m=0}(-1)^{n+m}\frac{\epsilon_{x}^{2(n+m+1)}}{(2n+1)!(2m+1)!}
+\end{align*}
+
+And adding in the cross-terms:
+
+\begin{equation}
+\cos^2(\epsilon_{x})\cos(\epsilon_{y}) = \sum_{k,l,m,n=0}(-1)^{k+l+m+n}\frac{\epsilon_{x}^{2(n+m)}\epsilon_{y}^{2(k+l)}}{(2n)!(2m)!(2k)!(2l)!}
+\end{equation}
+
+\begin{equation}
+\sin^2(\epsilon_{x})\cos(\epsilon_{y}) = \dots 
+\end{equation}
+
+The first several of these terms cancel out:
+
+\begin{equation*}
+\begin{split}
+ \cos^2(\epsilon_{x})\cos^2(\epsilon_{y}) + \sin^2(\epsilon_{x})\cos(\epsilon_{y}) + \cos(\epsilon_{x})\sin^2(\epsilon_{y})  =  1 - \epsilon_{x}^2 - \epsilon_{y}^2 + \\
+ \epsilon_{x}^2\epsilon_{y}^2 +  \frac{\epsilon_{x}^4 + \epsilon_{y}^4}{3} -\frac{\epsilon_{x}^2\epsilon_{y}^2}{3}\left(\epsilon_{y}^2 + \epsilon_{x}^2\right) + \frac{\epsilon_{x}^4\epsilon_{y}^4}{9} + \epsilon_{x}^2 + \frac{\epsilon_{x}^2\epsilon_{y}^2}{2} + \frac{x^2y^2}{24}\left(4\epsilon_{x}^2 + \epsilon_{y}^2\right) - \\
+ \frac{\epsilon_{x}^4\epsilon_{y}^4}{72} + \epsilon_{y}^2 + \frac{\epsilon_{x}^2\epsilon_{y}^2}{2} + \frac{x^2y^2}{24}\left(\epsilon_{x}^2 + 4\epsilon_{y}^2\right) - \frac{\epsilon_{x}^4\epsilon_{y}^4}{72} + O(\epsilon^{10})\\
+ = 1 + \frac{\epsilon_{x}^2\epsilon_{y}^2}{8}\left(\epsilon_{x}^2+\epsilon_{y}^2\right) - \frac{\epsilon_{x}^4\epsilon_{y}^4}{12}+O\left(\epsilon^{10}\right)
+\end{split}
+\end{equation*}
+
+
+And for $\epsilon_{x},\epsilon_{y} \ll 1$, the total error in the angle is:
+
+\begin{equation}
+\theta_{e} \approx \frac{\epsilon_{x}^2\epsilon_{y}^2}{8}\left(\epsilon_{x}^2+\epsilon_{y}^2\right)
+\end{equation}
+\end{document}

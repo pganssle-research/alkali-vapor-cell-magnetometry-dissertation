@@ -1,0 +1,206 @@
+\documentclass[12pt]{ucthesis}
+
+% Page layout. The fancyhdr package may complain about the need for a
+% larger headheight, depending on how long chapter titles are; if left
+% unspecified in the geometry setup, it defaults to 12pt. The
+% "showframe" option causes the geometry package (version >= 5.0) to
+% show a frame around the margins on every page, which is great for
+% checking that you don't overflow anywhere.
+
+%\usepackage[letterpaper,includehead,margin=1in,headheight=15pt,showframe]{geometry}
+\usepackage[letterpaper,includehead,margin=1in,headheight=15pt]{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx, tabularx, multirow,array, longtable}
+\usepackage{subfiles}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\newcolumntype{L}[1]{>{\flushleft\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{R}[1]{>{\flushright\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{D}[1]{>{\flushleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{E}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{F}[1]{>{\flushright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{G}[1]{>{\flushleft\let\newline\\\arraybackslash\hspace{0pt}}b{#1}}
+\newcolumntype{H}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}b{#1}}
+\newcolumntype{I}[1]{>{\flushright\let\newline\\\arraybackslash\hspace{0pt}}b{#1}}
+
+\setlength{\abovedisplayskip}{8pt}
+\setlength{\belowdisplayskip}{8pt}
+\setlength{\abovedisplayshortskip}{4pt}
+\setlength{\belowdisplayshortskip}{4pt}
+
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tabu}
+\usepackage{xfrac}
+\usepackage{units}
+\usepackage{wrapfig}
+\usepackage{floatflt}
+\usepackage{bbm}
+\usepackage[section,subsection,subsubsection]{styles/extraplaceins}
+\usepackage{titlesec}
+\setcounter{secnumdepth}{4}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\pagestyle{fancyplain}
+\lhead[\fancyplain{\thepage}{\thepage}]{\fancyplain{}{\scshape\rightmark}}
+\rhead[\fancyplain{}{\scshape\leftmark}]{\fancyplain{\thepage}{\thepage}}
+\chead{}
+\cfoot{}
+\lfoot{}
+\rfoot{}
+
+% Macros
+\newcommand{\degsym}{\ensuremath{^\circ}}
+\let\tw\textwidth
+\newdimen\lineheight
+\lineheight=\baselinestretch\baselineskip
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\rHz}{\ensuremath{\sqrt{\mathrm{Hz}}}}
+
+% Figure Fonts
+\renewcommand{\figurename}{\fontsize{10pt}{10pt}\selectfont\textbf{\emph{Figure}}}
+\renewcommand{\captionfont}{\fontsize{10pt}{10pt}\selectfont}
+
+% Bibliography stuff:
+
+\newcommand{\newblock}{\par} % need this for some natbib internal bug
+\usepackage[super,comma,sort&compress,square,numbers]{natbib}
+\bibliographystyle{styles/myieeetr}
+\setlength{\bibsep}{0ex} % single-space entries
+\def\bibpreamble{\addcontentsline{toc}{chapter}{Bibliography}} % get a good TOC entry
+
+% Other setup:
+
+\usepackage[T1]{fontenc} % see http://tinyurl.com/67zdxwf
+\usepackage{microtype} % various subtle typographic improvements
+\newcommand{\sttbinom}[2]{\genfrac{}{}{0pt}{\tiny}{#1}{#2}}
+
+\usepackage{color}
+\definecolor{lcolor}{rgb}{0,0,0}
+\definecolor{deepgreen}{rgb}{0.01, 0.50, 0.02}
+\definecolor{deeppurple}{rgb}{0.25, 0.00, 0.49}
+\definecolor{deepred}{rgb}{0.51, 0.00, 0.02}
+\definecolor{deepblue}{rgb}{0.00, 0.09, 0.49}
+\usepackage[breaklinks=true,
+    plainpages=false,
+    pdfpagelabels=true,
+    linktocpage=true,
+    unicode=false,
+    hyperfigures=true,
+    bookmarks=true,
+    bookmarksopen=true,
+    bookmarksopenlevel=1,
+    bookmarksnumbered=true, %chapter/section numbers in bookmarks pane
+    pagebackref=true,
+    backref=page,
+    colorlinks=true, % disable for print
+    citecolor= deepblue,
+    linkcolor= deepgreen,
+    menucolor= deepred,
+    urlcolor=deeppurple,
+    pdfstartview=FitV,
+    pdftitle={Alkali Vapor-Cell Magnetometry and its Application to Low Field Relaxometry and Diffusometry},
+    pdfsubject={Atomic Magnetometry},
+    pdfproducer={pdfTeX},
+    pdfcreator={XeLaTeX with hyperref}
+    pdfauthor={Paul Ganssle <pganssle@berkeley.edu>},
+    pdfkeywords={atomic physics, magnetometer, magnetometry, SERF, NMR, magnetic resonance, electronics, relaxometry, diffusometry, well-logging}
+]{hyperref}
+\usepackage{cleveref}
+\usepackage{pdflscape} % allows landscape-oriented figures with PDF page rotation
+\usepackage{styles/aasmacros,amsmath,amssymb}
+\usepackage{styles/mydeluxetable} % deluxetable customized to play well with ucthesis
+
+\usepackage{tipa}
+%\usepackage{algc}
+\usepackage{listings}
+\usepackage{textcomp}
+\lstset{basicstyle=\ttfamily\scriptsize,
+	tabsize=4,
+	upquote=true,
+	aboveskip={\baselineskip},
+	belowskip={\baselineskip},
+	columns=fixed,
+	extendedchars=true,
+	breaklines=true,
+	frame=none,
+	showtabs=false,
+	showspaces=false,
+	showstringspaces=false,
+	keywordstyle=\color{deepblue}\bfseries,
+	commentstyle=\color{deepgreen},
+	stringstyle=\color{deeppurple},
+	xleftmargin=2.5em}
+	
+\newcommand{\slrel}{T\ensuremath{_1}}
+\newcommand{\ssrel}{T\ensuremath{_2}}
+	
+\lstdefinestyle{C}{language=C,morekeywords={uint8,uint32,uchar,uint64,int32,int64,int32}}
+\lstdefinestyle{mat}{language=Matlab}
+
+\makeatletter
+\newcommand{\specialcell}[1]{\ifmeasuring@#1\else\omit$\displaystyle#1$\ignorespaces\fi}
+\makeatother
+
+% Utilities - Need Citation, Need Figure, Expand
+%\input{styles/todolists}
+
+\begin{document}
+\ssp % single spacing
+\hypersetup{pageanchor=false}
+\include{setup}
+\maketitle
+
+\copyrightpage
+%\approvalpage
+
+\begin{abstract}
+The availability of high-sensitivity magnetic sensors such as alkali vapor-cell magnetometers has fueled a growing body of literature on the development of inexpensive, portable and robust magnetic resonance systems which operate in ultra-low magnetic fields. This work covers the design, construction and operation of such a magnetometer, and its use as a high-sensitivity low-field detector of in nuclear magnetic resonance (NMR) experiments, including zero-field J-spectroscopy, relaxometry and diffusometry. In particular, we have attempted to demonstrate the utility of these devices for 1- and 2-dimensional relaxometry and diffusometry measurements, which are currently a significant commercial application of low-field NMR.
+\end{abstract}
+
+\hypersetup{pageanchor=true}
+\begin{frontmatter}
+
+\begin{dedication}
+\null\vfil
+{\large
+\begin{center}
+Dedicated to Tyren K. Barker
+\end{center}}
+\null\vfil
+\end{dedication}
+
+\tableofcontents
+%\listoffigures % optional
+%\listoftables % optional
+
+% If using code.sty, can also add:
+%% \listofcodes
+%% \addcontentsline{toc}{chapter}{List of Code Examples}
+\subfile{acknowledgements.tex}
+
+\end{frontmatter}
+
+\subfile{intro.tex}
+\subfile{magnetometry.tex}
+\subfile{design.tex}
+\subfile{console.tex}
+\subfile{nmrexperiments.tex}
+\subfile{relaxometry.tex}
+
+\bibliography{thesis}
+
+\appendix
+\subfile{appendices/terminology.tex}
+\subfile{appendices/proofs.tex}
+\subfile{appendices/blueprints.tex}
+\subfile{appendices/matlab.tex}
+
+%\maketodolists
+
+\end{document}

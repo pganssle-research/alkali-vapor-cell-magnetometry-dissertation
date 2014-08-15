@@ -1,0 +1,130 @@
+% To Do List Commands
+% \needcite, \listneededcitations
+% \needfig, \listneededfigs
+% \needexpand, \listneededexpansion
+\usepackage{hyperref}
+\usepackage{etoolbox}
+
+% Common commands.
+\newcommand{\textlist}[1]{ % Create a text list with name #1
+	\newcounter{tlctr#1}
+	\setcounter{tlctr#1}{0}
+}
+
+\newcommand{\gettextref}[2]{textref#2:#1}
+\newcommand{\addtext}[2]{%
+	\refstepcounter{tlctr#2}%
+	\csedef{text#2\arabic{tlctr#2}}{#1 (pp. \arabic{page})}%
+	\label{\gettextref{\arabic{tlctr#2}}{#2}}%
+}
+\newcommand{\getnumstrings}[1]{%
+	\value{tlctr#1}%
+}
+
+\newcommand{\getnstrings}[1]{%
+	\arabic{tlctr#1}%
+}
+
+\newcommand{\gettext}[2]{%
+	\csuse{text#2#1}%
+}
+
+\newcounter{tempcnti}
+\newcommand{\getalltextreferenced}[1]{%
+	\setcounter{tempcnti}{0}
+	\typeout{All Referenced Text. Group: #1}
+	\begin{itemize}
+	\whileboolexpr
+	{ test {\ifnumcomp{\thetempcnti}{<}{\value{tlctr#1}}}}%
+	{\stepcounter{tempcnti}%
+	\typeout{\arabic{tempcnti}: \gettext{\arabic{tempcnti}}{#1}}%
+	\item[\hyperlink{\gettextref{\arabic{tempcnti}}{#1}}{\arabic{tempcnti}}]\gettext{\arabic{tempcnti}}{#1} (\ref{\gettextref{\thetempcnti}{#1}})}%
+	\end{itemize}%
+}
+
+% NeedCite
+\textlist{CitationsNeededList}
+\DeclareRobustCommand{\needcite}[1] {%
+	\addtext{#1}{CitationsNeededList}\hyperref[todolist:CiteList]{{\scriptsize $^{[\textit{Cite}]}$}}
+}
+\newcommand{\listneededcitations} {%
+	\label{todolist:CiteList}%
+	\getalltextreferenced{CitationsNeededList}%
+}
+
+% NeedFig
+\textlist{FiguresNeededList}
+\DeclareRobustCommand{\needfig}[1] {%
+	\addtext{#1}{FiguresNeededList}\hyperref[todolist:FigureList]{{\scriptsize $^{\textit{[Fig]}}$}}%
+}
+
+\newcommand{\listneededfigures} {%
+	\label{todolist:FigureList}%
+	\getalltextreferenced{FiguresNeededList}%
+}
+
+% NeedExpand
+\textlist{ExpandNeededList}
+\DeclareRobustCommand{\needexpand}[1] {%
+	\addtext{#1}{ExpandNeededList}\hyperref[todolist:ExpandList]{{\scriptsize $^{\textit{[Expand]}}$}}
+}
+\newcommand{\listneededexpansions} {%
+	\label{todolist:ExpandList}%
+	\getalltextreferenced{ExpandNeededList}%
+}
+
+% NeedFactCheck
+\textlist{FactCheckNeededList}
+\DeclareRobustCommand{\needfact}[1] {%
+	\addtext{#1}{FactCheckNeededList}\hyperref[todolist:FactCheckList]{{\scriptsize $^{\textit{[Check]}}$}}
+}
+\newcommand{\listneededfactchecks} {%
+	\label{todolist:FactCheckList}%
+	\getalltextreferenced{FactCheckNeededList}%
+}
+
+% NeedEqn
+\textlist{EquationNeededList}
+\DeclareRobustCommand{\needeqn}[1] {%
+	\addtext{#1}{EquationNeededList}\hyperref[todolist:EqnList]{{\scriptsize $^{\textit{[Equation]}}$}}
+}
+\newcommand{\listneededeqns} {%
+	\label{todolist:EqnList}%
+	\getalltextreferenced{EquationNeededList}%
+}
+
+% Make it.
+\newcommand{\maketodolists}{
+\newcounter{todolistsnstr}
+\setcounter{todolistsnstr}{\getnumstrings{CitationsNeededList}}
+\addtocounter{todolistsnstr}{\getnumstrings{FiguresNeededList}}
+\addtocounter{todolistsnstr}{\getnumstrings{ExpandNeededList}}
+\addtocounter{todolistsnstr}{\getnumstrings{FactCheckNeededList}}
+\addtocounter{todolistsnstr}{\getnumstrings{EquationNeededList}}
+
+\typeout{--Problem--}
+\ifnumcomp{\thetodolistsnstr}{>}{0}{%
+\chapter{To Do}
+\ifnumcomp{\getnumstrings{CitationsNeededList}}{>}{0}{
+\section{Citations}
+\listneededcitations}{}
+\ifnumcomp{\getnumstrings{ExpandNeededList}}{>}{0}{
+\section{Text Expansion}%
+\listneededexpansions}{}
+\ifnumcomp{\getnumstrings{FiguresNeededList}}{>}{0}{
+\typeout{Figures starting.}
+\section{Figures}
+\listneededfigures}{}%
+\typeout{Figures done.}
+\ifnumcomp{\getnumstrings{FactCheckNeededList}}{>}{0}{
+\typeout{Fact checking starting.}
+\section{Fact Checking}
+\listneededfactchecks}{}%
+\typeout{Fact checking done.}
+\ifnumcomp{\getnumstrings{EquationNeededList}}{>}{0}{
+\section{Equations}
+\typeout{Eqns starting.}
+\listneededeqns}{}%
+}{}
+\typeout{Eqns ending.}
+}
