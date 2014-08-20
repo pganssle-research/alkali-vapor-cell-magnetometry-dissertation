@@ -2,3 +2,11 @@
 *.pyc
 Thumbs.db
 /figures/scripts/analyzedata/load_hist.pkl
+*.aux
+*.bbl
+*.brf
+*.synctex.gz
+*.out
+*.log
+*.toc
+*.blg

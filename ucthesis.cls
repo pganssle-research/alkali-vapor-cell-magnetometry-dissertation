@@ -441,7 +441,7 @@ by\par
 Some rights reserved\par 
 \begin{figure*}[b]
 \centering
-\includegraphics[width=0.4\textwidth]{by.eps}\par
+\includegraphics[width=0.4\textwidth]{figures/general/by.eps}\par
 This work is licensed under a Creative Commons Attribution 4.0 International License (CC-BY 4.0)
 \end{figure*}}
 \end{center}
